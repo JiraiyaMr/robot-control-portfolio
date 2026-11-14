@@ -1,0 +1,7 @@
+* text=auto
+*.md text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.csv text eol=lf
+# Imported source snapshots retain their exact archive bytes and encodings.
+firmware/** -text
