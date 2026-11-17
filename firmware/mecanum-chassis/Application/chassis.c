@@ -1,20 +1,7 @@
-/**
-  **************wust*********************************************************
-  * @file       chassis.c/h
-  * @brief      µ×ÅÌÈÎÎñ
-  * @author     wwy
-  @verbatim
-  ==============================================================================
-  1.
-  2.
-	ps:
-  ==============================================================================
-  @endverbatim
-  ******************************************************************************
-  */
+
 
 /**
- * @brief Í·ÎÄ¼þÉùÃ÷´¦
+ * @brief å¤´æ–‡ä»¶å£°æ˜Žå¤„
  * @param
  */
 #include "chassis.h"
@@ -33,7 +20,7 @@ int r;
 int before_ctrl_mode = ctrl_err;
 //int before_pid_mode = PID_MODE_Err;
 
-/* --------------------------ÈÎÎñ²ã------------------------- */
+/* --------------------------ä»»åŠ¡å±‚------------------------- */
 void chassis_task (void const * argument)
 {
 	chassis_Init();
@@ -45,7 +32,7 @@ void chassis_task (void const * argument)
 		osDelay(2);
 	}
 }
-/* --------------------------¿ØÖÆ²ã------------------------- */
+/* --------------------------æŽ§åˆ¶å±‚------------------------- */
 void RC_Ctrl (void)
 {
 //	chassis_t.chassis_RC = get_remote_control_point();
@@ -113,8 +100,8 @@ void KEY_Ctrl (void)
 	
 }
 
-/* --------------------------¹¦ÄÜ²ã------------------------- */
-//µ×ÅÌÐÅÏ¢³õÊ¼»¯
+/* --------------------------åŠŸèƒ½å±‚------------------------- */
+//åº•ç›˜ä¿¡æ¯åˆå§‹åŒ–
 void chassis_Init(void)
 {
 	int i;
@@ -125,7 +112,7 @@ void chassis_Init(void)
 	chassis_cmd_from_robots = SubRegister("chassis_cmd",sizeof(Robot_chassis_t));
 }
 
-//»ñÈ¡µ×ÅÌµç»úÐÅÏ¢
+//èŽ·å–åº•ç›˜ç”µæœºä¿¡æ¯
 void get_chassis_data(chassis_move_t *chassis)
 {
 	chassis->chassis_move_t[CHAS_LF].motor_data = get_CHAS_LF_motor_measure_point();
@@ -139,7 +126,7 @@ void get_chassis_data(chassis_move_t *chassis)
 	chassis->chassis_move_t[CHAS_RB].speed = chassis->chassis_move_t[CHAS_RB].motor_data->speed_rpm;
 }
 
-//½âËãµ×ÅÌ¸÷µç»úµÄËÙ¶È
+//è§£ç®—åº•ç›˜å„ç”µæœºçš„é€Ÿåº¦
 void resolving_speed(chassis_move_t *chassis_t)
 {
 	float theta = atan(1.0/1.0);
@@ -149,13 +136,13 @@ void resolving_speed(chassis_move_t *chassis_t)
 	vx = -chassis.Vx_set*100;
 	vy = chassis.Vy_set*100;
 	wz = -chassis.Wz_set*100;
-	/*¶æÂÖËÙ¶È½âËã*/
+	/*èˆµè½®é€Ÿåº¦è§£ç®—*/
 //  chassis_t->chassis_move_t[0].speed_set = sqrt((vy-wz*cos(theta))*(vy-wz*cos(theta))+(vx-wz*sin(theta))*(vx-wz*sin(theta)));
 //	chassis_t->chassis_move_t[1].speed_set = sqrt((vy-wz*cos(theta))*(vy-wz*cos(theta))+(vx+wz*sin(theta))*(vx+wz*sin(theta)));
 //	chassis_t->chassis_move_t[2].speed_set = sqrt((vy+wz*cos(theta))*(vy+wz*cos(theta))+(vx+wz*sin(theta))*(vx+wz*sin(theta)));
 //	chassis_t->chassis_move_t[3].speed_set = sqrt((vy+wz*cos(theta))*(vy+wz*cos(theta))+(vx-wz*sin(theta))*(vx-wz*sin(theta)));
 	
-	/*ÂóÂÖËÙ¶È½âËã*/
+	/*éº¦è½®é€Ÿåº¦è§£ç®—*/
 	chassis_t->chassis_move_t[0].speed_set = vx + vy +  MOTOR_DISTANCE_TO_CENTER * wz;
 	chassis_t->chassis_move_t[1].speed_set = -vx + vy +  MOTOR_DISTANCE_TO_CENTER * wz;
 	chassis_t->chassis_move_t[2].speed_set = -vx - vy + MOTOR_DISTANCE_TO_CENTER * wz;
@@ -163,10 +150,10 @@ void resolving_speed(chassis_move_t *chassis_t)
 	
 }
 
-//ÄæÔË¶¯½âËãµ×ÅÌËÙ¶È
+//é€†è¿åŠ¨è§£ç®—åº•ç›˜é€Ÿåº¦
 
 
-//ÉèÖÃµ×ÅÌµç»úPID²ÎÊý
+//è®¾ç½®åº•ç›˜ç”µæœºPIDå‚æ•°
 void set_chassis_pid_parameter (chassis_move_t *chassis)
 {
 	int i;
@@ -191,7 +178,7 @@ void set_chassis_pid_parameter (chassis_move_t *chassis)
 	pid_init(&chassis->buffer_pid, 1.5, 0.01, 0, 3000, 20000);
 }
 
-//¼ÆËãµç»úµÄÊä³öµçÁ÷
+//è®¡ç®—ç”µæœºçš„è¾“å‡ºç”µæµ
 void count_output(chassis_move_t *chassis)
 {
 	chassis->chassis_move_t[CHAS_LF].give_current = pid_calc(&chassis->chassis_speed_pid[CHAS_LF],
@@ -206,7 +193,7 @@ void count_output(chassis_move_t *chassis)
 	chassis->chassis_move_t[CHAS_RB].give_current = pid_calc(&chassis->chassis_speed_pid[CHAS_RB],
 	                                                          chassis->chassis_move_t[CHAS_RB].speed_set,
 	                                                          chassis->chassis_move_t[CHAS_RB].speed);
-//    //¹¦ÂÊ¿ØÖÆ
+//    //åŠŸçŽ‡æŽ§åˆ¶
   chassis_power_control(chassis);
 
 	CAN_cmd_chassis(chassis->chassis_move_t[CHAS_LF].give_current,chassis->chassis_move_t[CHAS_RF].give_current,
