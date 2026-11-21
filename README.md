@@ -1,4 +1,17 @@
-# Embedded Robot Control Portfolio
+# Robot Control Projects
+
+The robot projects are now maintained as three standalone repositories, each containing both chassis and gimbal application code, dependencies, configuration notes, and attribution.
+
+| Robot project | Repository |
+| --- | --- |
+| 云台-麦克纳姆轮底盘机器人 | [gimbal-mecanum-robot](https://github.com/JiraiyaMr/gimbal-mecanum-robot) |
+| 云台-全向轮底盘机器人 | [gimbal-omniwheel-robot](https://github.com/JiraiyaMr/gimbal-omniwheel-robot) |
+| 云台-舵轮底盘机器人 | [gimbal-swerve-robot](https://github.com/JiraiyaMr/gimbal-swerve-robot) |
+
+This original collection retains the source history and original imported directories. The new repositories distinguish the robot platform from the tasks enabled in each archived board configuration. Original source headers and third-party notices are retained.
+
+## Original collection documentation
+
 
 Firmware snapshots from RoboMaster development covering a mecanum chassis, swerve drive, and a gimbal / inertial-sensing stack.
 
